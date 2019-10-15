@@ -29,20 +29,20 @@ class Link {
   private LocalDateTime created;
   private LocalDateTime expiryDate;
   private Integer clicks;
-  private boolean enabled;
+  private boolean enabled = true;
 
   @PrePersist
   private void initialClicksValue() {
     this.clicks = 0;
-    this.enabled = true;
     this.expiryDate = LocalDateTime.now().plusDays(7);
+    enable();
   }
 
   void updateClicks() {
     this.clicks++;
   }
 
-  void enable() {
+  private void enable() {
     this.enabled = true;
   }
 

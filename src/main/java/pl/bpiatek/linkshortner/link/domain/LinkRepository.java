@@ -5,10 +5,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
 import pl.bpiatek.linkshortner.link.dto.LinkNotFoundException;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by Bartosz Piatek on 05/08/2019
  */
 interface LinkRepository extends Repository<Link, Long> {
+
   Link save(Link link);
   Link findById(Long id);
   Page<Link> findAll(Pageable pageable);
@@ -22,4 +25,14 @@ interface LinkRepository extends Repository<Link, Long> {
   }
 
   Link findByShortUrl(String url);
+
+  default Link findByShortUrlOrThrow(String url) {
+    Link byShortUrl = findByShortUrl(url);
+    if(byShortUrl == null) {
+      throw new LinkNotFoundException(url);
+    }
+    return byShortUrl;
+  }
+
+  void removeAllByExpiryDateBefore(LocalDateTime time);
 }

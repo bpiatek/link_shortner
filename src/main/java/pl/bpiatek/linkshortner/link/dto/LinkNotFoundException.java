@@ -6,10 +6,10 @@ package pl.bpiatek.linkshortner.link.dto;
 public class LinkNotFoundException extends RuntimeException {
 
   public LinkNotFoundException(Long id) {
-    super("No Link with id " + id + " found", null, false, false);
+    super("No Link with id " +  + id + " found", null, false, false);
   }
 
-  public LinkNotFoundException(String id) {
-    super("No Shortened Link for: " + id + " found", null, false, false);
+  public LinkNotFoundException(String shortUrl) {
+    super("No Shortened Link for: 'http://localhost:8080/" + shortUrl + "' found", null, false, false);
   }
 }

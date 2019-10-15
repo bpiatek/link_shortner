@@ -6,7 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bpiatek.linkshortner.link.dto.LinkDto;
-import pl.bpiatek.linkshortner.link.dto.LinkNotFoundException;
+
+import java.time.LocalDateTime;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019
@@ -45,15 +46,14 @@ public class LinkFacade {
 
   public LinkDto findByShortLink(String shortLink) {
     requireNonNull(shortLink);
-    Link shortUrl = linkRepository.findByShortUrl(shortLink);
-
-    if(shortUrl == null) {
-      throw new LinkNotFoundException(shortLink);
-    }
-
+    Link shortUrl = linkRepository.findByShortUrlOrThrow(shortLink);
     updateCount(shortUrl);
 
     return shortUrl.dto();
+  }
+
+  public void removeExpiredLinks() {
+    linkRepository.removeAllByExpiryDateBefore(LocalDateTime.now());
   }
 
   private void updateCount(Link link) {
