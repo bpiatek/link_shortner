@@ -24,4 +24,9 @@ public class LinkShortenerApplicationTests {
   public void fail() {
     Assert.assertEquals(1, 2);
   }
+
+  @Test
+  public void fail2() {
+    Assert.assertEquals(1, 2);
+  }
 }
