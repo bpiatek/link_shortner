@@ -13,4 +13,11 @@ public class LinkShortenerApplicationTests {
   @Test
   public void contextLoads() {
   }
+
+  @Test
+  public void someDummyTest() {
+
+    Assert.assertEquals(1, 1);
+
+  }
 }
