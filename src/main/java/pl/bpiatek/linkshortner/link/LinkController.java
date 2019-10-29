@@ -1,12 +1,14 @@
 package pl.bpiatek.linkshortner.link;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.bpiatek.linkshortner.link.domain.LinkFacade;
-import pl.bpiatek.linkshortner.link.dto.LinkDto;
+import pl.bpiatek.linkshortner.link.dto.LinkCreateRequest;
+import pl.bpiatek.linkshortner.link.dto.LinkResponse;
 
 import java.net.URI;
 
@@ -25,26 +27,27 @@ class LinkController {
   }
 
   @PostMapping("link")
-  LinkDto addLink(@Valid @RequestBody LinkDto linkDto) {
-    return linkFacade.add(linkDto);
+  LinkResponse addLink(@Valid @RequestBody LinkCreateRequest linkCreateRequest) {
+    return linkFacade.add(linkCreateRequest);
   }
 
   @GetMapping("links")
-  Page<LinkDto> findAll(Pageable pageable) {
+  Page<LinkResponse> findAll(Pageable pageable) {
     return linkFacade.findAll(pageable);
   }
 
-  @GetMapping("/show/{id}")
-  LinkDto findById(@PathVariable Long id) {
+  @GetMapping("/link/{id}")
+  LinkResponse findById(@PathVariable Long id) {
     return linkFacade.show(id);
   }
 
-  @GetMapping("/{shortLink}")
+  @GetMapping("short/{shortLink}")
   ResponseEntity<Void> redirect(@PathVariable String shortLink) {
-    String originalUrl = linkFacade.findByShortLink(shortLink).getOriginalUrl();
+    LinkResponse linkResponse = linkFacade.findByShortLink(shortLink);
+
 
     return ResponseEntity.status(HttpStatus.FOUND)
-        .location(URI.create(originalUrl))
+        .location(URI.create(linkResponse.getOriginalUrl()))
         .build();
   }
 }

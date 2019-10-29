@@ -2,10 +2,12 @@ package pl.bpiatek.linkshortner.link.domain;
 
 import static java.util.Objects.requireNonNull;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import pl.bpiatek.linkshortner.link.dto.LinkDto;
+import pl.bpiatek.linkshortner.link.dto.LinkCreateRequest;
+import pl.bpiatek.linkshortner.link.dto.LinkResponse;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @Transactional
 public class LinkFacade {
 
+  @Value("${link.base}")
+  private String linkBase;
   private LinkRepository linkRepository;
   private LinkCreator linkCreator;
 
@@ -23,41 +27,43 @@ public class LinkFacade {
     this.linkCreator = linkCreator;
   }
 
-  public LinkDto show(Long id) {
+  public LinkResponse show(Long id) {
     requireNonNull(id);
     Link link = linkRepository.findOneOrThrow(id);
 
-    return link.dto();
+    return link.dto(linkBase);
   }
 
-  public LinkDto add(LinkDto linkDto) {
-    requireNonNull(linkDto);
-    Link link = linkCreator.from(linkDto);
+  public LinkResponse add(LinkCreateRequest linkCreateRequest) {
+    requireNonNull(linkCreateRequest);
+    Link link = linkCreator.from(linkCreateRequest);
     link = linkRepository.save(link);
 
-    return link.dto();
+    return link.dto(linkBase);
   }
 
-  public Page<LinkDto> findAll(Pageable pageable) {
+  public Page<LinkResponse> findAll(Pageable pageable) {
     return linkRepository
         .findAll(pageable)
-        .map(Link::dto);
+        .map(l -> l.dto(linkBase));
   }
 
-  public LinkDto findByShortLink(String shortLink) {
+  public LinkResponse findByShortLink(String shortLink) {
     requireNonNull(shortLink);
     Link shortUrl = linkRepository.findByShortUrlOrThrow(shortLink);
-    updateCount(shortUrl);
+//    Link updateCount = updateCount(shortUrl);
 
-    return shortUrl.dto();
+    Link save = linkRepository.save(shortUrl);
+
+    return save.dto(linkBase);
   }
 
   public void removeExpiredLinks() {
     linkRepository.removeAllByExpiryDateBefore(LocalDateTime.now());
   }
 
-  private void updateCount(Link link) {
-    link.updateClicks();
-    linkRepository.save(link);
-  }
+//  private Link updateCount(Link link) {
+//    link.updateClicks();
+//    return linkRepository.save(link);
+//  }
 }

@@ -14,7 +14,9 @@ class LinkConfiguration {
 //  }
 
   @Bean
-  LinkFacade linkFacade(LinkRepository repository, LinkShortener linkShortener) {
+  LinkFacade linkFacade(LinkRepository repository) {
+    LinkValidator linkValidator = new LinkValidator();
+    LinkShortener linkShortener = new LinkShortener(linkValidator, repository);
     LinkCreator linkCreator = new LinkCreator(linkShortener);
     return new LinkFacade(repository, linkCreator);
   }

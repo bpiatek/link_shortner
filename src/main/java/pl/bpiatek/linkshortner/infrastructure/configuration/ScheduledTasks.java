@@ -18,7 +18,8 @@ class ScheduledTasks {
     this.linkFacade = linkFacade;
   }
 
-  @Scheduled(cron = "0/15 * * * * ?")
+
+  @Scheduled(cron = "0 0/1 * * * ?")
   void remove() {
     log.info("Removing expired links...");
     linkFacade.removeExpiredLinks();

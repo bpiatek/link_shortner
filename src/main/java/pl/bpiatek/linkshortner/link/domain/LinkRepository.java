@@ -31,6 +31,9 @@ interface LinkRepository extends Repository<Link, Long> {
     if(byShortUrl == null) {
       throw new LinkNotFoundException(url);
     }
+
+    byShortUrl.updateClicks();
+
     return byShortUrl;
   }
 
