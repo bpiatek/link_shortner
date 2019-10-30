@@ -1,6 +1,6 @@
 package pl.bpiatek.linkshortner.link.domain;
 
-import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 import pl.bpiatek.linkshortner.link.dto.InvalidLinkException;
 
 import java.util.UUID;
@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by Bartosz Piatek on 16/08/2019
  */
-@Service
+@Slf4j
 class LinkShortener {
 
   private LinkValidator linkValidator;
@@ -21,6 +21,7 @@ class LinkShortener {
 
   String shortenLink(String originalLink) {
     if(linkValidator.isValid(originalLink)) {
+      log.info("Link {} is valid.", originalLink);
       return createRandomLink();
     }
 
@@ -34,6 +35,7 @@ class LinkShortener {
       shortUrl = UUID.randomUUID().toString().substring(25);
     } while (shortenUrlAlreadyExists(shortUrl));
 
+    log.info("Created random link: {}", shortUrl);
     return shortUrl;
   }
 

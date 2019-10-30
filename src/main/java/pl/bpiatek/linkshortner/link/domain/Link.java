@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.bpiatek.linkshortner.link.dto.LinkDto;
+import pl.bpiatek.linkshortner.link.dto.LinkResponse;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +18,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 class Link {
-  private static final String LINK_BASE = "http://localhost:8080/";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,11 +49,11 @@ class Link {
     this.enabled = false;
   }
 
-  LinkDto dto() {
-    return LinkDto.builder()
+  LinkResponse dto(String linkBase) {
+    return LinkResponse.builder()
         .id(this.id)
         .originalUrl(this.originalUrl)
-        .shortUrl(LINK_BASE + this.shortUrl)
+        .shortUrl(linkBase + this.shortUrl)
         .created(this.created)
         .expiryDate(this.expiryDate)
         .clicks(this.clicks)

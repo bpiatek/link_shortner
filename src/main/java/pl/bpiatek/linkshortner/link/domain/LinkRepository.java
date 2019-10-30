@@ -2,10 +2,10 @@ package pl.bpiatek.linkshortner.link.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import pl.bpiatek.linkshortner.link.dto.LinkNotFoundException;
-
-import java.time.LocalDateTime;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019
@@ -31,8 +31,11 @@ interface LinkRepository extends Repository<Link, Long> {
     if(byShortUrl == null) {
       throw new LinkNotFoundException(url);
     }
+
     return byShortUrl;
   }
 
-  void removeAllByExpiryDateBefore(LocalDateTime time);
+  @Modifying
+  @Query("UPDATE Link l SET l.enabled = false WHERE l.expiryDate < CURRENT_DATE")
+  int setEnabledToFalse();
 }
