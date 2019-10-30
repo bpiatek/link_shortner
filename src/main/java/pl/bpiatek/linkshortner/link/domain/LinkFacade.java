@@ -50,20 +50,18 @@ public class LinkFacade {
 
   public LinkResponse findByShortLink(String shortLink) {
     requireNonNull(shortLink);
-    Link shortUrl = linkRepository.findByShortUrlOrThrow(shortLink);
-//    Link updateCount = updateCount(shortUrl);
+    Link link = linkRepository.findByShortUrlOrThrow(shortLink);
+    Link updatedLink = updateCount(link);
 
-    Link save = linkRepository.save(shortUrl);
-
-    return save.dto(linkBase);
+    return updatedLink.dto(linkBase);
   }
 
-  public void removeExpiredLinks() {
-    linkRepository.removeAllByExpiryDateBefore(LocalDateTime.now());
+  public int markExpired() {
+    return linkRepository.setEnabledToFalse();
   }
 
-//  private Link updateCount(Link link) {
-//    link.updateClicks();
-//    return linkRepository.save(link);
-//  }
+  private Link updateCount(Link link) {
+    link.updateClicks();
+    return linkRepository.save(link);
+  }
 }

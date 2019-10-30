@@ -1,6 +1,5 @@
 package pl.bpiatek.linkshortner.link;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -41,10 +40,9 @@ class LinkController {
     return linkFacade.show(id);
   }
 
-  @GetMapping("short/{shortLink}")
+  @GetMapping("/{shortLink}")
   ResponseEntity<Void> redirect(@PathVariable String shortLink) {
     LinkResponse linkResponse = linkFacade.findByShortLink(shortLink);
-
 
     return ResponseEntity.status(HttpStatus.FOUND)
         .location(URI.create(linkResponse.getOriginalUrl()))

@@ -1,8 +1,6 @@
 package pl.bpiatek.linkshortner.link.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -12,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LinkCreateRequest {
   @NotEmpty
   private String originalUrl;

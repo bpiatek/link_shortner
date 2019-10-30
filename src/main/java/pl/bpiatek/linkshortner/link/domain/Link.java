@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.beans.factory.annotation.Value;
 import pl.bpiatek.linkshortner.link.dto.LinkResponse;
 
 import java.time.LocalDateTime;
