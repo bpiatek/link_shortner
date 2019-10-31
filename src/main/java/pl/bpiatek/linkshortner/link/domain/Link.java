@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.bpiatek.linkshortner.link.dto.LinkResponse;
+import pl.bpiatek.linkshortner.link.api.LinkResponse;
 
 import java.time.LocalDateTime;
 

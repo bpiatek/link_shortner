@@ -2,7 +2,7 @@ package pl.bpiatek.linkshortner.link.domain;
 
 import static java.util.Objects.requireNonNull;
 
-import pl.bpiatek.linkshortner.link.dto.LinkCreateRequest;
+import pl.bpiatek.linkshortner.link.api.LinkCreateRequest;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019

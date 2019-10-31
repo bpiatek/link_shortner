@@ -1,4 +1,4 @@
-package pl.bpiatek.linkshortner.link.dto;
+package pl.bpiatek.linkshortner.link.api;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019

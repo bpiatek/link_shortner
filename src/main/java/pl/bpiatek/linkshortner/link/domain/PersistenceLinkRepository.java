@@ -5,12 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import pl.bpiatek.linkshortner.link.dto.LinkNotFoundException;
+import pl.bpiatek.linkshortner.link.api.LinkNotFoundException;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019
  */
-interface LinkRepository extends Repository<Link, Long> {
+interface PersistenceLinkRepository extends Repository<Link, Long> {
 
   Link save(Link link);
   Link findById(Long id);

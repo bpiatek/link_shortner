@@ -1,7 +1,7 @@
 package pl.bpiatek.linkshortner.link.domain;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.bpiatek.linkshortner.link.dto.InvalidLinkException;
+import pl.bpiatek.linkshortner.link.api.InvalidLinkException;
 
 import java.util.UUID;
 
@@ -12,11 +12,11 @@ import java.util.UUID;
 class LinkShortener {
 
   private LinkValidator linkValidator;
-  private LinkRepository linkRepository;
+  private PersistenceLinkRepository persistenceLinkRepository;
 
-  LinkShortener(LinkValidator linkValidator, LinkRepository linkRepository) {
+  LinkShortener(LinkValidator linkValidator, PersistenceLinkRepository persistenceLinkRepository) {
     this.linkValidator = linkValidator;
-    this.linkRepository = linkRepository;
+    this.persistenceLinkRepository = persistenceLinkRepository;
   }
 
   String shortenLink(String originalLink) {
@@ -40,6 +40,6 @@ class LinkShortener {
   }
 
   private boolean shortenUrlAlreadyExists(String shortUrl) {
-    return linkRepository.findByShortUrl(shortUrl) != null;
+    return persistenceLinkRepository.findByShortUrl(shortUrl) != null;
   }
 }

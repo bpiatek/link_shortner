@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.bpiatek.linkshortner.link.domain.LinkFacade;
-import pl.bpiatek.linkshortner.link.dto.LinkCreateRequest;
-import pl.bpiatek.linkshortner.link.dto.LinkResponse;
+import pl.bpiatek.linkshortner.link.api.LinkCreateRequest;
+import pl.bpiatek.linkshortner.link.api.LinkResponse;
 
 import java.net.URI;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -41,8 +42,9 @@ class LinkController {
   }
 
   @GetMapping("/{shortLink}")
-  ResponseEntity<Void> redirect(@PathVariable String shortLink) {
-    LinkResponse linkResponse = linkFacade.findByShortLink(shortLink);
+  ResponseEntity<Void> redirect(@PathVariable String shortLink, HttpServletRequest request) {
+    LinkResponse linkResponse = linkFacade.findByShortLink(shortLink, request);
+    linkFacade.publicUserAgentEvent(request, linkResponse.getId());
 
     return ResponseEntity.status(HttpStatus.FOUND)
         .location(URI.create(linkResponse.getOriginalUrl()))

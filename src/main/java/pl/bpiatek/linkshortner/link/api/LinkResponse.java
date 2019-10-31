@@ -1,4 +1,4 @@
-package pl.bpiatek.linkshortner.link.dto;
+package pl.bpiatek.linkshortner.link.api;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import pl.bpiatek.linkshortner.link.dto.InvalidLinkException;
-import pl.bpiatek.linkshortner.link.dto.LinkNotFoundException;
+import pl.bpiatek.linkshortner.link.api.InvalidLinkException;
+import pl.bpiatek.linkshortner.link.api.LinkNotFoundException;
 
 /**
  * Created by Bartosz Piatek on 16/08/2019
