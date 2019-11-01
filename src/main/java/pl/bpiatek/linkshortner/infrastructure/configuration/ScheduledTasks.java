@@ -14,7 +14,7 @@ class ScheduledTasks {
 
   private final LinkFacade linkFacade;
 
-  public ScheduledTasks(LinkFacade linkFacade) {
+  ScheduledTasks(LinkFacade linkFacade) {
     this.linkFacade = linkFacade;
   }
 
