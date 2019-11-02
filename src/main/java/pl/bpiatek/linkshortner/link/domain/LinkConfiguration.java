@@ -1,5 +1,9 @@
 package pl.bpiatek.linkshortner.link.domain;
 
+import static nl.basjes.parse.useragent.UserAgent.*;
+
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,13 +13,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class LinkConfiguration {
 
-//  LinkFacade linkFacade() {
-//    return linkFacade(new DatabaseRepository());
-//  }
-
   @Bean
-  LinkFacade linkFacade(LinkRepository repository, LinkShortener linkShortener) {
+  LinkFacade linkFacade(
+      PersistenceLinkRepository repository,
+      ApplicationEventPublisher applicationEventPublisher,
+      UserAgentAnalyzer userAgentAnalyzer
+  ) {
+    LinkValidator linkValidator = new LinkValidator();
+    UserAgentParser userAgentParser = new UserAgentParser(userAgentAnalyzer);
+    LinkShortener linkShortener = new LinkShortener(linkValidator, repository);
     LinkCreator linkCreator = new LinkCreator(linkShortener);
-    return new LinkFacade(repository, linkCreator);
+    return new LinkFacade(repository, linkCreator, applicationEventPublisher, userAgentParser);
   }
 }

@@ -2,12 +2,16 @@ package pl.bpiatek.linkshortner.link.domain;
 
 import static java.util.Objects.requireNonNull;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import pl.bpiatek.linkshortner.link.dto.LinkDto;
+import pl.bpiatek.linkshortner.link.api.*;
+import pl.bpiatek.linkshortner.useragent.api.UserAgentCreateEvent;
+import pl.bpiatek.linkshortner.useragent.api.UserAgentCreateRequest;
 
-import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019
@@ -15,49 +19,66 @@ import java.time.LocalDateTime;
 @Transactional
 public class LinkFacade {
 
-  private LinkRepository linkRepository;
+  @Value("${link.base}")
+  private String linkBase;
+  private PersistenceLinkRepository persistenceLinkRepository;
   private LinkCreator linkCreator;
+  private ApplicationEventPublisher applicationEventPublisher;
+  private UserAgentParser userAgentParser;
 
-  public LinkFacade(LinkRepository linkRepository, LinkCreator linkCreator) {
-    this.linkRepository = linkRepository;
+  public LinkFacade(
+      PersistenceLinkRepository persistenceLinkRepository,
+      LinkCreator linkCreator,
+      ApplicationEventPublisher applicationEventPublisher,
+      UserAgentParser userAgentParser
+  ) {
+    this.persistenceLinkRepository = persistenceLinkRepository;
     this.linkCreator = linkCreator;
+    this.applicationEventPublisher = applicationEventPublisher;
+    this.userAgentParser = userAgentParser;
   }
 
-  public LinkDto show(Long id) {
+  public LinkResponse show(Long id) {
     requireNonNull(id);
-    Link link = linkRepository.findOneOrThrow(id);
+    Link link = persistenceLinkRepository.findOneOrThrow(id);
 
-    return link.dto();
+    return link.dto(linkBase);
   }
 
-  public LinkDto add(LinkDto linkDto) {
-    requireNonNull(linkDto);
-    Link link = linkCreator.from(linkDto);
-    link = linkRepository.save(link);
+  public LinkResponse add(LinkCreateRequest linkCreateRequest) {
+    requireNonNull(linkCreateRequest);
+    Link link = linkCreator.from(linkCreateRequest);
+    link = persistenceLinkRepository.save(link);
 
-    return link.dto();
+    return link.dto(linkBase);
   }
 
-  public Page<LinkDto> findAll(Pageable pageable) {
-    return linkRepository
+  public Page<LinkResponse> findAll(Pageable pageable) {
+    return persistenceLinkRepository
         .findAll(pageable)
-        .map(Link::dto);
+        .map(l -> l.dto(linkBase));
   }
 
-  public LinkDto findByShortLink(String shortLink) {
+  public LinkResponse findByShortLink(String shortLink, HttpServletRequest request) {
     requireNonNull(shortLink);
-    Link shortUrl = linkRepository.findByShortUrlOrThrow(shortLink);
-    updateCount(shortUrl);
+    requireNonNull(request);
+    Link link = persistenceLinkRepository.findByShortUrlOrThrow(shortLink);
+    Link updatedLink = updateCount(link);
 
-    return shortUrl.dto();
+    return updatedLink.dto(linkBase);
   }
 
-  public void removeExpiredLinks() {
-    linkRepository.removeAllByExpiryDateBefore(LocalDateTime.now());
+  public int markExpired() {
+    return persistenceLinkRepository.setEnabledToFalse();
   }
 
-  private void updateCount(Link link) {
+  public void publicUserAgentEvent(HttpServletRequest request, Long linkId) {
+    UserAgentCreateRequest details = userAgentParser.getDetails(request, linkId);
+    applicationEventPublisher.publishEvent(new UserAgentCreateEvent(details));
+  }
+
+  private Link updateCount(Link link) {
     link.updateClicks();
-    linkRepository.save(link);
+    return persistenceLinkRepository.save(link);
   }
 }
