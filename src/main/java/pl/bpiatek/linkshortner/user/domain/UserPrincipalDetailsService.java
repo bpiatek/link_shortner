@@ -9,19 +9,19 @@ import org.springframework.stereotype.Service;
  * Created by Bartosz Piatek on 04/11/2019
  */
 @Service
-public class UserPrincipalDetailsService implements UserDetailsService {
+class UserPrincipalDetailsService implements UserDetailsService {
 
   private PersistenceUserRepository userRepository;
 
-  UserPrincipalDetailsService(
-      PersistenceUserRepository userRepository
-  ) {
+  UserPrincipalDetailsService(PersistenceUserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(s);
-    return new UserPrincipal(user);
+
+    return new UserPrincipal(userRepository.findByUsername(s).orElseThrow(
+        () -> new UsernameNotFoundException("No user found with username: " + s)
+    ));
   }
 }

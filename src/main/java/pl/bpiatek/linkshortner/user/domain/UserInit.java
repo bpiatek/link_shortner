@@ -14,7 +14,7 @@ class UserInit {
   private PersistenceUserRepository userRepository;
   private PasswordEncoder passwordEncoder;
 
-  public UserInit(
+  UserInit(
       PersistenceUserRepository userRepository,
       PasswordEncoder passwordEncoder
   ) {
@@ -24,7 +24,7 @@ class UserInit {
 
   @PostConstruct
   void init() {
-    userRepository.save(new User("admin", passwordEncoder.encode("password"), "ADMIN", "ACCESS_TEST1,ACCESS_TEST2"));
-    userRepository.save(new User("user", passwordEncoder.encode("password"), "USER", "w"));
+    userRepository.save(new User("admin", passwordEncoder.encode("pass"), "ADMIN", ""));
+    userRepository.save(new User("user", passwordEncoder.encode("pass"), "USER", ""));
   }
 }

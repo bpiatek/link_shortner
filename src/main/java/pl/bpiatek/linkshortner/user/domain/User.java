@@ -2,7 +2,9 @@ package pl.bpiatek.linkshortner.user.domain;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import pl.bpiatek.linkshortner.user.api.UserResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,5 +61,13 @@ class User {
     }
 
     return Arrays.asList(this.permissions.split(","));
+  }
+
+  UserResponse dto() {
+    return UserResponse.builder()
+        .id(this.id)
+        .username(this.username)
+        .active(this.active)
+        .build();
   }
 }
