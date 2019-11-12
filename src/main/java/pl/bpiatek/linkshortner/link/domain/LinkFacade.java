@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import pl.bpiatek.linkshortner.link.api.LinkRedirectRequest;
 import pl.bpiatek.linkshortner.link.api.LinkCreateRequest;
 import pl.bpiatek.linkshortner.link.api.LinkResponse;
 import pl.bpiatek.linkshortner.useragent.api.UserAgentCreateEvent;
@@ -26,27 +25,21 @@ public class LinkFacade {
   @Value("${link.base}")
   private String linkBase;
 
-  @Value(value = "#{'${list.to.trim}'.split(',')}")
-  private List<String> stringList;
-
   private LinkRepository linkRepository;
   private LinkCreator linkCreator;
   private ApplicationEventPublisher applicationEventPublisher;
   private UserAgentParser userAgentParser;
-  private LinkValidator linkValidator;
 
   public LinkFacade(
       LinkRepository linkRepository,
       LinkCreator linkCreator,
       ApplicationEventPublisher applicationEventPublisher,
-      UserAgentParser userAgentParser,
-      LinkValidator linkValidator
+      UserAgentParser userAgentParser
   ) {
     this.linkRepository = linkRepository;
     this.linkCreator = linkCreator;
     this.applicationEventPublisher = applicationEventPublisher;
     this.userAgentParser = userAgentParser;
-    this.linkValidator = linkValidator;
   }
 
   public LinkResponse show(Long id) {
@@ -70,13 +63,11 @@ public class LinkFacade {
         .map(l -> l.dto(linkBase));
   }
 
-  public LinkResponse findByShortLinkAndRedirect(LinkRedirectRequest linkRedirectRequest, HttpServletRequest request) {
-    requireNonNull(linkRedirectRequest);
+  public LinkResponse findByShortLinkAndRedirect(String shortLink, HttpServletRequest request) {
+    requireNonNull(shortLink);
     requireNonNull(request);
 
-    String trimmedShortUrl = linkValidator.trimShortLink(linkRedirectRequest.getShortenedLink(), stringList);
-
-    Link link = linkRepository.findByShortUrlOrThrow(trimmedShortUrl, linkBase);
+    Link link = linkRepository.findByShortUrlOrThrow(shortLink, linkBase);
     Link updatedLink = updateCount(link);
 
     publicUserAgentEvent(request, updatedLink.id());
