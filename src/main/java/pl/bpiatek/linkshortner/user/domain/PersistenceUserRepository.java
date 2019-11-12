@@ -1,16 +1,17 @@
 package pl.bpiatek.linkshortner.user.domain;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Bartosz Piatek on 04/11/2019
  */
-@org.springframework.stereotype.Repository
 interface PersistenceUserRepository extends Repository<User, Long> {
 
-  User findByUsername(String username);
-  List<User> findAll();
+  Optional<User> findByUsername(String username);
+  Page<User> findAll(Pageable pageable);
   User save(User user);
 }

@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.bpiatek.linkshortner.user.domain.UserPrincipalDetailsService;
+import pl.bpiatek.linkshortner.user.domain.UserFacade;
 
 /**
  * Created by Bartosz Piatek on 04/11/2019
@@ -18,25 +18,43 @@ import pl.bpiatek.linkshortner.user.domain.UserPrincipalDetailsService;
 @EnableWebSecurity
 class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  private UserPrincipalDetailsService userPrincipalDetailsService;
+  private final UserFacade userFacade;
 
-  public SpringSecurityConfiguration(UserPrincipalDetailsService userPrincipalDetailsService) {
-    this.userPrincipalDetailsService = userPrincipalDetailsService;
+  public SpringSecurityConfiguration(UserFacade userFacade) {
+    this.userFacade = userFacade;
   }
+
+  private static final String[] AUTH_WHITELIST = {
+      // swagger ui
+      "/",
+      "/v2/api-docs",
+      "/configuration/ui",
+      "/swagger-resources/**",
+      "/configuration/security",
+      "/swagger-ui.html",
+      "/webjars/**",
+      "/csrf",
+
+      // h2 database
+      "/h2-console/**",
+  };
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable().headers().frameOptions().disable()
-        .and()
+    http.csrf().disable()
         .authorizeRequests()
-        .antMatchers("/api/test/2").hasAuthority("ACCESS_TEST2")
-        .antMatchers("/api/test/1").hasAuthority("ACCESS_TEST1")
-        .antMatchers("/api/user/all").hasRole("ADMIN")
+        .antMatchers(AUTH_WHITELIST).permitAll()
         .anyRequest().authenticated()
         .and()
         .httpBasic();
-//        .antMatchers("/api/authentication/login").permitAll()
-//        .antMatchers("/api/**").authenticated();
+
+    http
+        .logout()
+        .clearAuthentication(true)
+        .invalidateHttpSession(true)
+        .deleteCookies("JSESSIONID");
+
+    http.headers().frameOptions().disable();
   }
 
   @Override
@@ -48,7 +66,7 @@ class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
   DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
     daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-    daoAuthenticationProvider.setUserDetailsService(userPrincipalDetailsService);
+    daoAuthenticationProvider.setUserDetailsService(userFacade.getUserPrincipalDetailsService());
 
     return daoAuthenticationProvider;
   }

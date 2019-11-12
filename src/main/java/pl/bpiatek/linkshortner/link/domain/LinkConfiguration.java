@@ -1,7 +1,5 @@
 package pl.bpiatek.linkshortner.link.domain;
 
-import static nl.basjes.parse.useragent.UserAgent.*;
-
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
