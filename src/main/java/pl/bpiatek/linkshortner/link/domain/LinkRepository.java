@@ -10,7 +10,7 @@ import pl.bpiatek.linkshortner.link.api.LinkNotFoundException;
 /**
  * Created by Bartosz Piatek on 05/08/2019
  */
-interface PersistenceLinkRepository extends Repository<Link, Long> {
+interface LinkRepository extends Repository<Link, Long> {
 
   Link save(Link link);
   Link findById(Long id);
@@ -26,10 +26,10 @@ interface PersistenceLinkRepository extends Repository<Link, Long> {
 
   Link findByShortUrl(String url);
 
-  default Link findByShortUrlOrThrow(String url) {
-    Link byShortUrl = findByShortUrl(url);
+  default Link findByShortUrlOrThrow(String shortUrl, String urlBase) {
+    Link byShortUrl = findByShortUrl(shortUrl);
     if(byShortUrl == null) {
-      throw new LinkNotFoundException(url);
+      throw new LinkNotFoundException(shortUrl, urlBase);
     }
 
     return byShortUrl;

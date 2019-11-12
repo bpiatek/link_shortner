@@ -49,6 +49,10 @@ class Link {
     this.enabled = false;
   }
 
+  Long id() {
+    return this.id;
+  }
+
   LinkResponse dto(String linkBase) {
     return LinkResponse.builder()
         .id(this.id)

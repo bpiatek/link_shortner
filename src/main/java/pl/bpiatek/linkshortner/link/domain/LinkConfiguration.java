@@ -13,7 +13,7 @@ class LinkConfiguration {
 
   @Bean
   LinkFacade linkFacade(
-      PersistenceLinkRepository repository,
+      LinkRepository repository,
       ApplicationEventPublisher applicationEventPublisher,
       UserAgentAnalyzer userAgentAnalyzer
   ) {

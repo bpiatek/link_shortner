@@ -19,6 +19,7 @@ public class UserAgentCreateRequest {
   private String operatingSystemName;
   private String operatingSystemClass;
   private String agentName;
+  private String language;
   private LocalDateTime clickDate;
   private Long linkId;
 }
