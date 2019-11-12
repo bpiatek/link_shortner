@@ -21,6 +21,6 @@ class LinkConfiguration {
     UserAgentParser userAgentParser = new UserAgentParser(userAgentAnalyzer);
     LinkShortener linkShortener = new LinkShortener(linkValidator, repository);
     LinkCreator linkCreator = new LinkCreator(linkShortener);
-    return new LinkFacade(repository, linkCreator, applicationEventPublisher, userAgentParser);
+    return new LinkFacade(repository, linkCreator, applicationEventPublisher, userAgentParser, linkValidator);
   }
 }
