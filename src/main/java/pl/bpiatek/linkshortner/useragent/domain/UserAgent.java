@@ -25,6 +25,7 @@ class UserAgent {
   private String operatingSystemName;
   private String operatingSystemClass;
   private String agentName;
+  private String language;
   private LocalDateTime clickDate;
   @NotNull
   private Long linkId;

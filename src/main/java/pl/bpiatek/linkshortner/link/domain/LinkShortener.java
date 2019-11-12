@@ -12,11 +12,11 @@ import java.util.UUID;
 class LinkShortener {
 
   private LinkValidator linkValidator;
-  private PersistenceLinkRepository persistenceLinkRepository;
+  private LinkRepository linkRepository;
 
-  LinkShortener(LinkValidator linkValidator, PersistenceLinkRepository persistenceLinkRepository) {
+  LinkShortener(LinkValidator linkValidator, LinkRepository linkRepository) {
     this.linkValidator = linkValidator;
-    this.persistenceLinkRepository = persistenceLinkRepository;
+    this.linkRepository = linkRepository;
   }
 
   String shortenLink(String originalLink) {
@@ -40,6 +40,6 @@ class LinkShortener {
   }
 
   private boolean shortenUrlAlreadyExists(String shortUrl) {
-    return persistenceLinkRepository.findByShortUrl(shortUrl) != null;
+    return linkRepository.findByShortUrl(shortUrl) != null;
   }
 }

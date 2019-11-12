@@ -30,6 +30,7 @@ class UserAgentParser {
     String deviceName = userAgent.getValue(DEVICE_NAME);
     String deviceBrand = userAgent.getValue(DEVICE_BRAND);
     String agentName = userAgent.getValue(AGENT_NAME);
+    String language = userAgent.getValue(AGENT_LANGUAGE);
 
     return new UserAgentCreateRequest(
         deviceName,
@@ -37,6 +38,7 @@ class UserAgentParser {
         operatingSystemName,
         operatingSystemClass,
         agentName,
+        language,
         LocalDateTime.now(),
         linkId
     );

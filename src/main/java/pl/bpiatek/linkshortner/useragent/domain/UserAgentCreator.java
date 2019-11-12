@@ -18,6 +18,7 @@ class UserAgentCreator {
         .agentName(userAgentCreateRequest.getAgentName())
         .deviceBrand(userAgentCreateRequest.getDeviceBrand())
         .deviceName(userAgentCreateRequest.getDeviceName())
+        .language(userAgentCreateRequest.getLanguage())
         .clickDate(userAgentCreateRequest.getClickDate())
         .linkId(userAgentCreateRequest.getLinkId())
         .build();
