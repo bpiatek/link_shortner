@@ -11,9 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.bpiatek.linkshortner.link.api.LinkRedirectRequest;
 import pl.bpiatek.linkshortner.link.api.LinkCreateRequest;
 import pl.bpiatek.linkshortner.link.api.LinkResponse;
 import pl.bpiatek.linkshortner.link.domain.LinkFacade;
@@ -85,9 +83,9 @@ class LinkController {
       @ApiResponse(code = 403, message = FORBIDDEN),
       @ApiResponse(code = 404, message = NOT_FOUND)
   })
-  @PostMapping("redirect")
-  ResponseEntity<Void> redirect(@Validated @RequestBody LinkRedirectRequest linkRedirectRequest, HttpServletRequest request) {
-    LinkResponse linkResponse = linkFacade.findByShortLinkAndRedirect(linkRedirectRequest, request);
+  @GetMapping("redirect/{shortLink}")
+  ResponseEntity<Void> redirect(@PathVariable String shortLink, HttpServletRequest request) {
+    LinkResponse linkResponse = linkFacade.findByShortLinkAndRedirect(shortLink, request);
 
     return ResponseEntity.status(FOUND)
         .location(URI.create(linkResponse.getOriginalUrl()))
