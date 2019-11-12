@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEvent;
 /**
  * Created by Bartosz Piatek on 31/10/2019
  */
-@JsonIgnoreProperties({"source"})
+@JsonIgnoreProperties({"payload"})
 public class DomainEvent extends ApplicationEvent {
 
   private final String type;
@@ -16,11 +16,11 @@ public class DomainEvent extends ApplicationEvent {
     this.type = type;
   }
 
-  public String getType() {
+  String getType() {
     return type;
   }
 
-  public Object getPayload() {
+  Object getPayload() {
     return source;
   }
 
