@@ -12,9 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.bpiatek.linkshortner.link.api.LinkCreateRequest;
-import pl.bpiatek.linkshortner.link.api.LinkResponse;
+import pl.bpiatek.linkshortner.link.api.*;
 import pl.bpiatek.linkshortner.link.domain.LinkFacade;
+import pl.bpiatek.linkshortner.link.query.LinkQueryDTO;
 
 import java.net.URI;
 
@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * Created by Bartosz Piatek on 05/08/2019
  */
 @Api(value = "Link rest controller")
-@RequestMapping(value = "api/link", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(produces = APPLICATION_JSON_VALUE)
 @RestController
 class LinkController {
 
@@ -41,7 +41,7 @@ class LinkController {
       @ApiResponse(code = 401, message = UNAUTHORIZED),
       @ApiResponse(code = 403, message = FORBIDDEN)
   })
-  @PostMapping
+  @PostMapping("api/link")
   ResponseEntity<LinkResponse> addLink(@ApiParam(value = "Request object to create shortened link", required = true)
                                        @Valid @RequestBody LinkCreateRequest linkCreateRequest) {
     LinkResponse linkResponse = linkFacade.add(linkCreateRequest);
@@ -56,7 +56,7 @@ class LinkController {
       @ApiResponse(code = 403, message = FORBIDDEN),
       @ApiResponse(code = 404, message = NOT_FOUND)
   })
-  @GetMapping("all")
+  @GetMapping("api/link/all")
   Page<LinkResponse> findAll(Pageable pageable) {
     return linkFacade.findAll(pageable);
   }
@@ -68,7 +68,7 @@ class LinkController {
       @ApiResponse(code = 403, message = FORBIDDEN),
       @ApiResponse(code = 404, message = NOT_FOUND)
   })
-  @GetMapping("{id}")
+  @GetMapping("api/link/{id}")
   ResponseEntity<LinkResponse> findById(@ApiParam(value = "Id of the specific link", required = true)
                                         @PathVariable Long id) {
     LinkResponse linkResponse = linkFacade.show(id);
@@ -83,12 +83,26 @@ class LinkController {
       @ApiResponse(code = 403, message = FORBIDDEN),
       @ApiResponse(code = 404, message = NOT_FOUND)
   })
-  @GetMapping("redirect/{shortLink}")
+  @GetMapping("/{shortLink}")
   ResponseEntity<Void> redirect(@PathVariable String shortLink, HttpServletRequest request) {
     LinkResponse linkResponse = linkFacade.findByShortLinkAndRedirect(shortLink, request);
 
     return ResponseEntity.status(FOUND)
         .location(URI.create(linkResponse.getOriginalUrl()))
         .build();
+  }
+
+  @ApiOperation(value = "Retrieve information about original link based on the shortened one", response = LinkResponse.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 302, message = "Link is successfully retrieved"),
+      @ApiResponse(code = 401, message = UNAUTHORIZED),
+      @ApiResponse(code = 403, message = FORBIDDEN),
+      @ApiResponse(code = 404, message = NOT_FOUND)
+  })
+  @PostMapping("api/link/check")
+  ResponseEntity<LinkResponse> check(@RequestBody LinkCheckRequest linkCheckRequest) {
+    LinkResponse linkResponse = linkFacade.findByShortLink(linkCheckRequest.getShortenedLink());
+
+    return ResponseEntity.ok(linkResponse);
   }
 }

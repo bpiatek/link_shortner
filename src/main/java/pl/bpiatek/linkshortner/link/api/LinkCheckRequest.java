@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LinkRedirectRequest {
+public class LinkCheckRequest {
 
   @NotEmpty
   private String shortenedLink;

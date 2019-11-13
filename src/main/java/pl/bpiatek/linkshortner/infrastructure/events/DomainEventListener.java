@@ -20,7 +20,7 @@ class DomainEventListener {
   }
 
   @EventListener
-  public void receiveTestEvent(DomainEvent domainEvent) {
+  public void receiveEvent(DomainEvent domainEvent) {
 
     if(domainEvent.getType().equals("USER_AGENT")) {
       userAgentFacade.save((UserAgentCreateRequest) domainEvent.getPayload());

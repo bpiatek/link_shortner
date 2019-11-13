@@ -25,21 +25,27 @@ public class LinkFacade {
   @Value("${link.base}")
   private String linkBase;
 
+  @Value(value = "#{'${list.to.trim}'.split(',')}")
+  private List<String> stringList;
+
   private LinkRepository linkRepository;
   private LinkCreator linkCreator;
   private ApplicationEventPublisher applicationEventPublisher;
   private UserAgentParser userAgentParser;
+  private LinkValidator linkValidator;
 
   public LinkFacade(
       LinkRepository linkRepository,
       LinkCreator linkCreator,
       ApplicationEventPublisher applicationEventPublisher,
-      UserAgentParser userAgentParser
+      UserAgentParser userAgentParser,
+      LinkValidator linkValidator
   ) {
     this.linkRepository = linkRepository;
     this.linkCreator = linkCreator;
     this.applicationEventPublisher = applicationEventPublisher;
     this.userAgentParser = userAgentParser;
+    this.linkValidator = linkValidator;
   }
 
   public LinkResponse show(Long id) {
@@ -78,7 +84,9 @@ public class LinkFacade {
   public LinkResponse findByShortLink(String shortLink) {
     requireNonNull(shortLink);
 
-    return linkRepository.findByShortUrlOrThrow(shortLink, linkBase)
+    String trimmedShortLink = linkValidator.trimShortLink(shortLink, stringList);
+
+    return linkRepository.findByShortUrlOrThrow(trimmedShortLink, linkBase)
         .dto(linkBase);
   }
 
