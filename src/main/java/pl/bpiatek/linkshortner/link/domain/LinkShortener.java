@@ -35,7 +35,7 @@ class LinkShortener {
       shortUrl = UUID.randomUUID().toString().substring(25);
     } while (shortenUrlAlreadyExists(shortUrl));
 
-    log.info("Created random link: {}", shortUrl);
+    log.info("Created random short link: {}", shortUrl);
     return shortUrl;
   }
 

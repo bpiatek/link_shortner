@@ -2,15 +2,14 @@ package pl.bpiatek.linkshortner.link.api;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 /**
  * Created by Bartosz Piatek on 05/08/2019
  */
+@ToString
 @Builder
 @Getter
 @EqualsAndHashCode

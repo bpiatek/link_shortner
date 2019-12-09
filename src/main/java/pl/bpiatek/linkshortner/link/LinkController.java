@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.bpiatek.linkshortner.link.api.LinkCheckRequest;
 import pl.bpiatek.linkshortner.link.api.LinkCreateRequest;
@@ -85,7 +87,7 @@ class LinkController {
       @ApiResponse(code = 404, message = NOT_FOUND)
   })
   @GetMapping("redirect/{shortLink}")
-  ResponseEntity<Void> redirect(@PathVariable String shortLink, HttpServletRequest request) {
+  ResponseEntity<Void> redirect(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String shortLink, HttpServletRequest request) {
     LinkResponse linkResponse = linkFacade.findByShortLinkAndRedirect(shortLink, request);
 
     return ResponseEntity.status(FOUND)

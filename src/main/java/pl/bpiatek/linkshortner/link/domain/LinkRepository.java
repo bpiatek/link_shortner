@@ -36,6 +36,6 @@ interface LinkRepository extends Repository<Link, Long> {
   }
 
   @Modifying
-  @Query("UPDATE Link l SET l.enabled = false WHERE l.expiryDate < CURRENT_DATE")
+  @Query("UPDATE Link l SET l.enabled = false WHERE l.expiryDate < CURRENT_DATE AND l.enabled <> false")
   int setEnabledToFalse();
 }
