@@ -37,6 +37,11 @@ class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
       // h2 database
       "/h2-console/**",
+
+      // links
+      "/api/link/redirect/**",
+      "/api/link/check/**",
+      "/api/link/"
   };
 
   @Override
