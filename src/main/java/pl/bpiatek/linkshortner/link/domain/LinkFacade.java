@@ -22,10 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Transactional
 public class LinkFacade {
 
-  @Value("${link.base}")
   private String linkBase;
-
-  @Value(value = "#{'${list.to.trim}'.split(',')}")
   private List<String> stringList;
 
   private LinkRepository linkRepository;
@@ -35,12 +32,16 @@ public class LinkFacade {
   private LinkValidator linkValidator;
 
   public LinkFacade(
+      @Value("${link.base}") String linkBase,
+      @Value(value = "#{'${list.to.trim}'.split(',')}") List<String> stringList,
       LinkRepository linkRepository,
       LinkCreator linkCreator,
       ApplicationEventPublisher applicationEventPublisher,
       UserAgentParser userAgentParser,
       LinkValidator linkValidator
   ) {
+    this.linkBase = linkBase;
+    this.stringList = stringList;
     this.linkRepository = linkRepository;
     this.linkCreator = linkCreator;
     this.applicationEventPublisher = applicationEventPublisher;
