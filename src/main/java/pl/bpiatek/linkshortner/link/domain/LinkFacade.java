@@ -77,7 +77,7 @@ public class LinkFacade {
     Link link = linkRepository.findByShortUrlOrThrow(shortLink, linkBase);
     Link updatedLink = updateCount(link);
 
-    publicUserAgentEvent(request, updatedLink.id());
+    publicUserAgentEvent(request, updatedLink.dto(linkBase).getId());
 
     return updatedLink.dto(linkBase);
   }
@@ -101,7 +101,7 @@ public class LinkFacade {
   }
 
   private Link updateCount(Link link) {
-    link.updateClicks();
+    link.incrementClicks();
     return linkRepository.save(link);
   }
 }

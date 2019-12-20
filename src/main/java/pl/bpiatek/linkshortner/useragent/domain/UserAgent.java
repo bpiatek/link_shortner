@@ -1,6 +1,7 @@
 package pl.bpiatek.linkshortner.useragent.domain;
 
 import lombok.*;
+import pl.bpiatek.linkshortner.useragent.api.UserAgentResponse;
 
 import java.time.LocalDateTime;
 
@@ -29,4 +30,18 @@ class UserAgent {
   private LocalDateTime clickDate;
   @NotNull
   private Long linkId;
+
+  UserAgentResponse dto() {
+    return UserAgentResponse.builder()
+        .id(this.id)
+        .agentName(this.agentName)
+        .clickDate(this.clickDate)
+        .deviceBrand(this.deviceBrand)
+        .deviceName(this.deviceName)
+        .language(this.language)
+        .operatingSystemClass(this.operatingSystemClass)
+        .operatingSystemName(this.operatingSystemName)
+        .linkId(this.linkId)
+        .build();
+  }
 }
