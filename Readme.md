@@ -54,4 +54,7 @@ spring security is already partially implemented with 2 hardcoded users.
 Links 
 -
 If you want to play with the api here is the link to swagger:
-<a href="http://bpiatek.pl:8080/swagger-ui.html" rel="nofollow">http://bpiatek.pl:8080/swagger-ui.html</a></h1>
+<a href="http://bpiatek.pl:8080/swagger-ui.html" rel="nofollow">http://bpiatek.pl:8080/swagger-ui.html</a></h1>  
+**User credentials:**  
+login: user  
+password: pass
