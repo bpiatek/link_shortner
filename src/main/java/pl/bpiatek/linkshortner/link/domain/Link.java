@@ -37,7 +37,7 @@ class Link {
     enable();
   }
 
-  void updateClicks() {
+  void incrementClicks() {
     this.clicks++;
   }
 
@@ -47,10 +47,6 @@ class Link {
 
   void disable() {
     this.enabled = false;
-  }
-
-  Long id() {
-    return this.id;
   }
 
   LinkResponse dto(String linkBase) {

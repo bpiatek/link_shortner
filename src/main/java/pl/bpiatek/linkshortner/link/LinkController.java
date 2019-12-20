@@ -32,7 +32,7 @@ import javax.validation.Valid;
 @RestController
 class LinkController {
 
-  private LinkFacade linkFacade;
+  private final LinkFacade linkFacade;
 
   public LinkController(LinkFacade linkFacade) {
     this.linkFacade = linkFacade;
